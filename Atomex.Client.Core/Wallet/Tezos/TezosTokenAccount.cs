@@ -563,7 +563,7 @@ namespace Atomex.Wallet.Tezos
                 UnconfirmedOutcome += address.UnconfirmedOutcome;
             }
 
-            BalanceUpdated?.Invoke(this, new CurrencyEventArgs(Currency));
+            BalanceUpdated?.Invoke(this, new CurrencyEventArgs($"{TokenType}:{_tokenContract}:{_tokenId}"));
         }
 
         #endregion Balances
