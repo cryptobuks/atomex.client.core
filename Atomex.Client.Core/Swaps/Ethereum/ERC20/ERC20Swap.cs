@@ -250,7 +250,7 @@ namespace Atomex.Swaps.Ethereum
                 return;
             }
 
-            var feeInEth = EthConfig.GetFeeAmount(erc20Config.RedeemGasLimit, gasPrice);
+            var feeInEth = EthereumConfig.GetFeeInEth(erc20Config.RedeemGasLimit, gasPrice);
 
             if (walletAddress.Balance < feeInEth)
             {
@@ -373,7 +373,7 @@ namespace Atomex.Swaps.Ethereum
                 return;
             }
 
-            var feeInEth = EthConfig.GetFeeAmount(erc20Config.RedeemGasLimit, gasPrice);
+            var feeInEth = EthereumConfig.GetFeeInEth(erc20Config.RedeemGasLimit, gasPrice);
 
             if (walletAddress.Balance < feeInEth)
             {
@@ -500,7 +500,7 @@ namespace Atomex.Swaps.Ethereum
                 return;
             }
 
-            var feeInEth = EthConfig.GetFeeAmount(erc20Config.RefundGasLimit, gasPrice);
+            var feeInEth = EthereumConfig.GetFeeInEth(erc20Config.RefundGasLimit, gasPrice);
 
             if (walletAddress.Balance < feeInEth)
             {

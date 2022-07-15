@@ -107,11 +107,13 @@ namespace Atomex.Wallet.BitcoinBased
 
             var scanParams = new[]
             {
-                new {Chain = Bip44.Internal, LookAhead = InternalLookAhead},
-                new {Chain = Bip44.External, LookAhead = ExternalLookAhead},
+                (KeyType : CurrencyConfig.StandardKey, Chain : Bip44.Internal, LookAhead : InternalLookAhead),
+                (KeyType : CurrencyConfig.StandardKey, Chain : Bip44.External, LookAhead : ExternalLookAhead),
+                (KeyType : BitcoinBasedConfig.SegwitKey, Chain : Bip44.Internal, LookAhead : InternalLookAhead),
+                (KeyType : BitcoinBasedConfig.SegwitKey, Chain : Bip44.External, LookAhead : ExternalLookAhead)
             };
 
-            foreach (var param in scanParams)
+            foreach (var (keyType, chain, lookAhead) in scanParams)
             {
                 var freeKeysCount = 0;
                 var index = 0u;
@@ -123,9 +125,9 @@ namespace Atomex.Wallet.BitcoinBased
                     var walletAddress = await Account
                         .DivideAddressAsync(
                             account: Bip44.DefaultAccount,
-                            chain: param.Chain,
+                            chain: chain,
                             index: index,
-                            keyType: CurrencyConfig.StandardKey)
+                            keyType: keyType)
                         .ConfigureAwait(false);
 
                     if (walletAddress == null)
@@ -151,7 +153,7 @@ namespace Atomex.Wallet.BitcoinBased
                     Log.Debug(
                         "Scan outputs for {@name} address {@chain}:{@index}:{@address}",
                         currency.Name,
-                        param.Chain,
+                        chain,
                         index,
                         walletAddress.Address);
 
@@ -181,9 +183,9 @@ namespace Atomex.Wallet.BitcoinBased
                     {
                         freeKeysCount++;
 
-                        if (freeKeysCount >= param.LookAhead)
+                        if (freeKeysCount >= lookAhead)
                         {
-                            Log.Debug($"{param.LookAhead} free keys found. Chain scan completed");
+                            Log.Debug($"{lookAhead} free keys found. Chain scan completed");
                             break;
                         }
                     }

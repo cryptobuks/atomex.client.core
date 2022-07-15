@@ -149,10 +149,7 @@ namespace Atomex.Blockchain.BitcoinBased
         {
             var scopedPrivateKey = privateKey.ToUnsecuredBytes();
 
-            var key = new Key(scopedPrivateKey);
-            var debugAddress = spentOutput.DestinationAddress(bitcoinBasedConfig.Network);
-            var keyAddress = key.PubKey.GetAddress(bitcoinBasedConfig);
-            
+            var key = new Key(scopedPrivateKey);            
 
             Sign(key, spentOutput, bitcoinBasedConfig); // todo: do not use NBitcoin.Key
         }

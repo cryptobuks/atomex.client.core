@@ -129,8 +129,5 @@ namespace Atomex.EthereumTokens
                 ? rewardForRedeemInEth / feeCurrencyPrice
                 : rewardForRedeemInEth * feeCurrencyPrice, DigitsMultiplier);
         }
-
-        public override decimal GetDefaultFee() =>
-            TransferGasLimit;
     }
 }

@@ -162,7 +162,7 @@ namespace Atomex
         public override IKey CreateKey(SecureBytes seed) =>
             new EthereumKey(seed);
 
-        public override string AddressFromKey(byte[] publicKey) =>
+        public override string AddressFromKey(byte[] publicKey, int keyType) =>
             new EthECKey(publicKey, false)
                 .GetPublicAddress()
                 .ToLowerInvariant();
@@ -171,25 +171,12 @@ namespace Atomex
             new AddressUtil()
                 .IsValidEthereumAddressHexFormat(address);
 
-        public override bool IsAddressFromKey(string address, byte[] publicKey) =>
-            AddressFromKey(publicKey).ToLowerInvariant()
-                .Equals(address.ToLowerInvariant());
+        public static decimal GetFeeInEth(decimal gasLimit, decimal gasPrice) =>
+            gasLimit * gasPrice / GweiInEth;
 
-        //public override bool VerifyMessage(byte[] data, byte[] signature, byte[] publicKey) =>
-        //    new EthECKey(publicKey, false)
-        //        .Verify(data, EthECDSASignature.FromDER(signature));
-
-        public override decimal GetFeeAmount(decimal fee, decimal feePrice) =>
-            fee * feePrice / GweiInEth;
-
-        public override decimal GetFeeFromFeeAmount(decimal feeAmount, decimal feePrice) =>
-            feePrice != 0
-                ? Math.Floor(feeAmount / feePrice * GweiInEth)
-                : 0;
-
-        public override decimal GetFeePriceFromFeeAmount(decimal feeAmount, decimal fee) =>
-            fee != 0
-                ? Math.Floor(feeAmount / fee * GweiInEth)
+        public static decimal GetGasPriceFromFeeInEth(decimal feeInEth, decimal gasLimit) =>
+            gasLimit != 0
+                ? Math.Floor(feeInEth / gasLimit * GweiInEth)
                 : 0;
 
         public override async Task<decimal> GetPaymentFeeAsync(
@@ -250,13 +237,6 @@ namespace Atomex
                 feeCurrencyToBaseSymbol: feeCurrencyToBaseSymbol,
                 feeCurrencyToBasePrice: feeCurrencyToBasePrice);
         }
-
-        public override Task<decimal> GetDefaultFeePriceAsync(
-            CancellationToken cancellationToken = default) =>
-            GetGasPriceAsync(cancellationToken);
-
-        public override decimal GetDefaultFee() =>
-            GasLimit;
 
         public async Task<decimal> GetGasPriceAsync(
             CancellationToken cancellationToken = default)

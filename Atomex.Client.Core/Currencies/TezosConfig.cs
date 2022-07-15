@@ -202,7 +202,7 @@ namespace Atomex
         public override IKey CreateKey(SecureBytes seed) =>
             new Ed25519Key(seed);
 
-        public override string AddressFromKey(byte[] publicKey) {
+        public override string AddressFromKey(byte[] publicKey, int keyType) {
             
             return Base58Check.Encode(
                 data: new HmacBlake2b(HmacBlake2b.DefaultKeySize, PkHashSize).Mac(key: null, publicKey),
@@ -214,26 +214,7 @@ namespace Atomex
             Address.CheckTz2Address(address) ||
             Address.CheckTz3Address(address) ||
             Address.CheckKtAddress(address);
-
-        public override bool IsAddressFromKey(string address, byte[] publicKey) =>
-             AddressFromKey(publicKey).ToLowerInvariant()
-                .Equals(address.ToLowerInvariant());
-
-        //public override bool VerifyMessage(byte[] data, byte[] signature, byte[] publicKey) =>
-        //    TezosSigner.Verify(
-        //        data: data,
-        //        signature: signature,
-        //        publicKey: publicKey);
  
-        public override decimal GetFeeAmount(decimal fee, decimal feePrice) =>
-            fee;
-
-        public override decimal GetFeeFromFeeAmount(decimal feeAmount, decimal feePrice) =>
-            feeAmount;
-
-        public override decimal GetFeePriceFromFeeAmount(decimal feeAmount, decimal fee) =>
-            1m;
-
         public override Task<decimal> GetPaymentFeeAsync(
             CancellationToken cancellationToken = default) =>
             Task.FromResult(InitiateFee.ToTez());

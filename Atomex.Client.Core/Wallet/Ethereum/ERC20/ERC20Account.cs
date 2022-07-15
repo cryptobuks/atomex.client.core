@@ -81,7 +81,7 @@ namespace Atomex.Wallet.Ethereum
                     code: Errors.InsufficientGas,
                     description: "Insufficient gas");
 
-            var feeAmount = erc20Config.GetFeeAmount(gasLimit, gasPrice);
+            var feeAmount = EthereumConfig.GetFeeInEth(gasLimit, gasPrice);
 
             Log.Debug("Fee per transaction {@feePerTransaction}. Fee Amount {@feeAmount}",
                 gasLimit,
@@ -190,7 +190,7 @@ namespace Atomex.Wallet.Ethereum
                 .GetGasPriceAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            return EthConfig.GetFeeAmount(GasLimitByType(type), gasPrice);
+            return EthereumConfig.GetFeeInEth(GasLimitByType(type), gasPrice);
         }
 
         public async Task<decimal?> EstimateSwapPaymentFeeAsync(
@@ -244,7 +244,7 @@ namespace Atomex.Wallet.Ethereum
 
             var reserveFeeInEth = ReserveFee(estimatedGasPrice);
 
-            var feeInEth = eth.GetFeeAmount(
+            var feeInEth = EthereumConfig.GetFeeInEth(
                 gasLimit == null
                     ? GasLimitByType(type)
                     : gasLimit.Value,
@@ -356,8 +356,8 @@ namespace Atomex.Wallet.Ethereum
             var erc20 = Erc20Config;
 
             return Math.Max(
-                eth.GetFeeAmount(Math.Max(erc20.RefundGasLimit, erc20.RedeemGasLimit), gasPrice),
-                eth.GetFeeAmount(Math.Max(eth.RefundGasLimit, eth.RedeemGasLimit), gasPrice));
+                EthereumConfig.GetFeeInEth(Math.Max(erc20.RefundGasLimit, erc20.RedeemGasLimit), gasPrice),
+                EthereumConfig.GetFeeInEth(Math.Max(eth.RefundGasLimit, eth.RedeemGasLimit), gasPrice));
         }
 
         protected override async Task<bool> ResolveTransactionTypeAsync(
@@ -664,7 +664,6 @@ namespace Atomex.Wallet.Ethereum
             decimal feePrice,
             CancellationToken cancellationToken = default)
         {
-            var erc20 = Erc20Config;
             var eth = EthConfig;
 
             var fromAddress = await GetAddressAsync(from, cancellationToken)
@@ -673,7 +672,7 @@ namespace Atomex.Wallet.Ethereum
             if (fromAddress == null)
                 return null; // invalid address
 
-            var feeInEth = erc20.GetFeeAmount(fee, feePrice);
+            var feeInEth = EthereumConfig.GetFeeInEth(fee, feePrice);
 
             var ethAddress = await DataRepository
                 .GetWalletAddressAsync(eth.Name, fromAddress.Address)

@@ -70,10 +70,7 @@ namespace Atomex
             Bip44Code               = Bip44.Litecoin;
         }
 
-        public override long GetDust()
-        {
-            return DustThreshold;
-        }
+        public override long GetDust() => DustThreshold;
 
         private static Network ResolveNetwork(IConfiguration configuration)
         {

@@ -51,19 +51,9 @@ namespace Atomex.Core
 
         public abstract IKey CreateKey(SecureBytes seed);
 
-        public abstract string AddressFromKey(byte[] publicKey);
+        public abstract string AddressFromKey(byte[] publicKey, int keyType);
 
         public abstract bool IsValidAddress(string address);
-
-        public abstract bool IsAddressFromKey(string address, byte[] publicKey);
-
-        //public abstract bool VerifyMessage(byte[] data, byte[] signature, byte[] publicKey);
-
-        public abstract decimal GetFeeAmount(decimal fee, decimal feePrice);
-
-        public abstract decimal GetFeeFromFeeAmount(decimal feeAmount, decimal feePrice);
-
-        public abstract decimal GetFeePriceFromFeeAmount(decimal feeAmount, decimal fee);
 
         public abstract Task<decimal> GetPaymentFeeAsync(
             CancellationToken cancellationToken = default);
@@ -85,12 +75,6 @@ namespace Atomex.Core
             string feeCurrencySymbol = null,
             decimal feeCurrencyPrice = 0,
             CancellationToken cancellationToken = default);
-
-        public virtual Task<decimal> GetDefaultFeePriceAsync(
-            CancellationToken cancellationToken = default) => Task.FromResult(1m);
-
-        public virtual decimal GetDefaultFee() =>
-            1m;
 
         public virtual decimal GetMaximumFee() =>
             decimal.MaxValue;

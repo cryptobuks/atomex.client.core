@@ -176,7 +176,7 @@ namespace Atomex.Wallet.Ethereum
                 .GetGasPriceAsync(cancellationToken)
                 .ConfigureAwait(false));
 
-            return EthConfig.GetFeeAmount(GasLimitByType(type), gasPrice);
+            return EthereumConfig.GetFeeInEth(GasLimitByType(type), gasPrice);
         }
 
         public async Task<decimal?> EstimateSwapPaymentFeeAsync(
@@ -222,7 +222,7 @@ namespace Atomex.Wallet.Ethereum
                 .GetGasPriceAsync(cancellationToken)
                 .ConfigureAwait(false));
 
-            var feeInEth = eth.GetFeeAmount(
+            var feeInEth = EthereumConfig.GetFeeInEth(
                 gasLimit == null
                     ? GasLimitByType(type)
                     : gasLimit.Value,
@@ -302,8 +302,8 @@ namespace Atomex.Wallet.Ethereum
             var erc20Config = Erc20Config;
 
             return Math.Max(
-                ethConfig.GetFeeAmount(Math.Max(erc20Config.RefundGasLimit, erc20Config.RedeemGasLimit), gasPrice),
-                ethConfig.GetFeeAmount(Math.Max(ethConfig.RefundGasLimit, ethConfig.RedeemGasLimit), gasPrice));
+                EthereumConfig.GetFeeInEth(Math.Max(erc20Config.RefundGasLimit, erc20Config.RedeemGasLimit), gasPrice),
+                EthereumConfig.GetFeeInEth(Math.Max(ethConfig.RefundGasLimit, ethConfig.RedeemGasLimit), gasPrice));
         }
 
         protected override async Task<bool> ResolveTransactionTypeAsync(
@@ -658,15 +658,13 @@ namespace Atomex.Wallet.Ethereum
             decimal feePrice,
             CancellationToken cancellationToken = default)
         {
-            var eth = EthConfig;
-
             var fromAddress = await GetAddressAsync(from, cancellationToken)
                 .ConfigureAwait(false);
 
             if (fromAddress == null)
                 return null; // invalid address
 
-            var feeInEth = eth.GetFeeAmount(fee, feePrice);
+            var feeInEth = EthereumConfig.GetFeeInEth(fee, feePrice);
 
             var restBalanceInEth = fromAddress.AvailableBalance() -
                amount -
