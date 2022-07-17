@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using NBitcoin;
 
 using Atomex.Abstract;
+using Atomex.Common;
 using Atomex.Common.Configuration;
 using Atomex.Core;
 using Atomex.Swaps.Abstract;
 using Atomex.TezosTokens;
-using Atomex.Common;
 
 namespace Atomex.Client.Core.Tests
 {
@@ -27,10 +27,6 @@ namespace Atomex.Client.Core.Tests
         private static Assembly CoreAssembly { get; } = AppDomain.CurrentDomain
             .GetAssemblies()
             .FirstOrDefault(a => a.GetName().Name == "Atomex.Client.Core");
-
-        //public static readonly IConfiguration CurrenciesConfiguration = new ConfigurationBuilder()
-        //    .AddEmbeddedJsonFile(CoreAssembly, "currencies.json")
-        //    .Build();
 
         public static string CurrenciesConfigurationString
         {
@@ -74,19 +70,15 @@ namespace Atomex.Client.Core.Tests
         public static Symbol EthBtcTestNet => SymbolsTestNet.GetByName("ETH/BTC");
         public static Symbol LtcBtcTestNet => SymbolsTestNet.GetByName("LTC/BTC");
 
-        public static string AliceAddress(BitcoinBasedConfig currency)
-        {
-            return Alice.PubKey
+        public static string AliceAddress(BitcoinBasedConfig currency) =>
+            Alice.PubKey
                 .GetAddress(ScriptPubKeyType.Legacy, currency.Network)
                 .ToString();
-        }
 
-        public static string BobAddress(BitcoinBasedConfig currency)
-        {
-            return Bob.PubKey
+        public static string BobAddress(BitcoinBasedConfig currency) =>
+            Bob.PubKey
                 .GetAddress(ScriptPubKeyType.Legacy, currency.Network)
                 .ToString();
-        }
 
         public static string AliceSegwitAddress(BitcoinBasedConfig currency) =>
             Alice.PubKey

@@ -1,59 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NBitcoin;
 
-using NBitcoin;
-
-using Atomex.Blockchain.Abstract;
 using Atomex.Blockchain.BitcoinBased;
 
 namespace Atomex.Client.Core.Tests
 {
     public static class BitcoinBasedCommon
     {
-        public static IBitcoinBasedTransaction CreateFakeTx(BitcoinBasedConfig currency, PubKey to, params long[] outputs)
+        public static IBitcoinBasedTransaction CreateFakeTx(
+            string currency,
+            Network network,
+            params (IDestination, long)[] destinations)
         {
-            var tx = Transaction.Create(currency.Network);
+            var tx = Transaction.Create(network);
 
-            foreach (var output in outputs)
-                tx.Outputs.Add(new TxOut(new Money(output), to.Hash)); // p2pkh
+            foreach (var (destination, value) in destinations)
+                tx.Outputs.Add(new TxOut(new Money(value), destination));
 
-            return new BitcoinBasedTransaction(currency.Name, tx);
-        }
-
-        public static IBitcoinBasedTransaction CreateSegwitPaymentTx(
-            BitcoinBasedConfig currency,
-            IEnumerable<ITxOutput> outputs,
-            PubKey from,
-            PubKey to,
-            int amount,
-            int fee)
-        {
-            return currency.CreateP2WPkhTx(
-                unspentOutputs: outputs,
-                destinationAddress: to.GetAddress(ScriptPubKeyType.Segwit, currency.Network).ToString(),
-                changeAddress: from.GetAddress(ScriptPubKeyType.Segwit, currency.Network).ToString(),
-                amount: amount,
-                fee: fee);
-        }
-
-        public static IBitcoinBasedTransaction CreatePaymentTx(
-            BitcoinBasedConfig currency,
-            IEnumerable<ITxOutput> outputs,
-            PubKey from,
-            PubKey to,
-            int amount,
-            int fee,
-            DateTimeOffset lockTime,
-            params Script[] knownRedeems)
-        {
-            return currency.CreateP2PkhTx(
-                unspentOutputs: outputs,
-                destinationAddress: to.GetAddress(ScriptPubKeyType.Legacy, currency.Network).ToString(),
-                changeAddress: from.GetAddress(ScriptPubKeyType.Legacy, currency.Network).ToString(),
-                amount: amount,
-                fee: fee,
-                lockTime: lockTime,
-                knownRedeems: knownRedeems);
+            return new BitcoinBasedTransaction(currency, tx);
         }
     }
 }
