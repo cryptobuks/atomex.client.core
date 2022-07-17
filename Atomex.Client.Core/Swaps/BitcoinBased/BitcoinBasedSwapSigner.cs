@@ -111,7 +111,7 @@ namespace Atomex.Swaps.BitcoinBased
                 return null;
             }
 
-            var refundScriptSig = BitcoinBasedSwapTemplate.GenerateHtlcSwapRefundForP2Sh(
+            var refundScriptSig = BitcoinSwapTemplate.CreateHtlcSwapRefundForP2Sh(
                 aliceRefundSig: signature,
                 aliceRefundPubKey: refundAddress.PublicKeyBytes(),
                 redeemScript: redeemScript);
@@ -171,7 +171,7 @@ namespace Atomex.Swaps.BitcoinBased
                 return null;
             }
 
-            var redeemScriptSig = BitcoinBasedSwapTemplate.GenerateP2PkhSwapRedeemForP2Sh(
+            var redeemScriptSig = BitcoinSwapTemplate.CreateHtlcSwapRedeemForP2Sh(
                 sig: signature,
                 pubKey: redeemAddress.PublicKeyBytes(),
                 secret: secret,

@@ -256,13 +256,13 @@ namespace Atomex.Swaps.BitcoinBased
 
             var partyRedeemScript = swap.PartyRefundAddress == null && swap.PartyRedeemScript != null
                 ? new Script(Convert.FromBase64String(swap.PartyRedeemScript))
-                : BitcoinBasedSwapTemplate.GenerateHtlcP2PkhSwapPayment(
+                : BitcoinSwapTemplate.CreateHtlcSwapLockScript(
                     aliceRefundAddress: swap.PartyRefundAddress,
                     bobAddress: swap.ToAddress,
                     lockTimeStamp: refundTimeUtcInSec,
                     secretHash: swap.SecretHash,
                     secretSize: DefaultSecretSize,
-                    expectedNetwork: bitcoinBased.Network);
+                    network: bitcoinBased.Network);
 
             var side = swap.Symbol
                 .OrderSideForBuyCurrency(swap.PurchasedCurrency)
@@ -388,14 +388,14 @@ namespace Atomex.Swaps.BitcoinBased
 
             var currency = Currencies.Get<BitcoinBasedConfig>(Currency);
 
-            var redeemScript = BitcoinBasedSwapTemplate
-                .GenerateHtlcP2PkhSwapPayment(
+            var redeemScript = BitcoinSwapTemplate
+                .CreateHtlcSwapLockScript(
                     aliceRefundAddress: refundAddress.Address,
                     bobAddress: swap.PartyAddress,
                     lockTimeStamp: lockTime.ToUnixTimeSeconds(),
                     secretHash: swap.SecretHash,
                     secretSize: DefaultSecretSize,
-                    expectedNetwork: currency.Network)
+                    network: currency.Network)
                 .ToBytes();
 
             swap.RefundTx = await CreateRefundTxAsync(

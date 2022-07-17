@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Atomex.Blockchain.Abstract;
+
 using NBitcoin;
+
+using Atomex.Blockchain.Abstract;
 
 namespace Atomex.Blockchain.BitcoinBased
 {
@@ -17,21 +19,10 @@ namespace Atomex.Blockchain.BitcoinBased
             _input = input ?? throw new ArgumentNullException(nameof(input));
         }
 
-        public IEnumerable<byte[]> ExtractAllPushData()
-        {
-            return BitcoinBasedSwapTemplate.ExtractAllPushData(_input.ScriptSig);
-        }
+        public IEnumerable<byte[]> ExtractAllPushData() =>
+            BitcoinSwapTemplate.ExtractAllPushData(_input.ScriptSig);
 
-        public bool IsRedeem()
-        {
-            return BitcoinBasedSwapTemplate.IsP2PkhSwapRedeem(_input.ScriptSig) ||
-                BitcoinBasedSwapTemplate.IsP2PkhScriptSwapRedeem(_input.ScriptSig);
-        }
-
-        public bool IsRefund()
-        {
-            return BitcoinBasedSwapTemplate.IsP2PkhSwapRefund(_input.ScriptSig) || 
-                BitcoinBasedSwapTemplate.IsP2PkhScriptSwapRefund(_input.ScriptSig);
-        }
+        public bool IsRefund() =>
+            BitcoinSwapTemplate.IsSwapRefund(_input.ScriptSig);
     }
 }

@@ -51,12 +51,6 @@ namespace Atomex.Blockchain.BitcoinBased
         public bool IsP2Sh =>
             Coin.TxOut.ScriptPubKey.IsScriptType(ScriptType.P2SH);
 
-        public bool IsP2PkhSwapPayment =>
-            BitcoinBasedSwapTemplate.IsP2PkhSwapPayment(Coin.TxOut.ScriptPubKey);
-
-        public bool IsHtlcP2PkhSwapPayment =>
-            BitcoinBasedSwapTemplate.IsHtlcP2PkhSwapPayment(Coin.TxOut.ScriptPubKey);
-
         public bool IsPayToScriptHash(Script redeemScript) =>
             IsP2Sh && redeemScript.PaymentScript.Equals(Coin.TxOut.ScriptPubKey);
 

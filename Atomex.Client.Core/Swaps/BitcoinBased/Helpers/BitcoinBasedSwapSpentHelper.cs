@@ -47,14 +47,14 @@ namespace Atomex.Swaps.BitcoinBased.Helpers
 
                     var redeemScript = swap.RefundAddress == null && swap.RedeemScript != null
                         ? new Script(Convert.FromBase64String(swap.RedeemScript))
-                        : BitcoinBasedSwapTemplate
-                            .GenerateHtlcP2PkhSwapPayment(
+                        : BitcoinSwapTemplate
+                            .CreateHtlcSwapLockScript(
                                 aliceRefundAddress: swap.RefundAddress,
                                 bobAddress: swap.PartyAddress,
                                 lockTimeStamp: refundTimeUtcInSec,
                                 secretHash: swap.SecretHash,
                                 secretSize: CurrencySwap.DefaultSecretSize,
-                                expectedNetwork: bitcoinBased.Network);
+                                network: bitcoinBased.Network);
 
                     var swapOutput = ((IBitcoinBasedTransaction)swap.PaymentTx)
                         .Outputs

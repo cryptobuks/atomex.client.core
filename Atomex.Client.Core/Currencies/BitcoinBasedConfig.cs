@@ -217,13 +217,13 @@ namespace Atomex
                 .Cast<BitcoinBasedTxOutput>()
                 .Select(o => o.Coin);
 
-            var swap = BitcoinBasedSwapTemplate.GenerateHtlcP2PkhSwapPayment(
+            var swap = BitcoinSwapTemplate.CreateHtlcSwapLockScript(
                 aliceRefundAddress: aliceRefundAddress,
                 bobAddress: bobAddress,
                 lockTimeStamp: lockTime.ToUnixTimeSeconds(),
                 secretHash: secretHash,
                 secretSize: secretSize,
-                expectedNetwork: Network);
+                network: Network);
 
             redeemScript = swap.ToBytes();
 

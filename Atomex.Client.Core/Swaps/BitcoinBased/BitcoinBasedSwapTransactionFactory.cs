@@ -37,13 +37,13 @@ namespace Atomex.Swaps.BitcoinBased
                 .GetFeeRateAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            var lockScript = BitcoinBasedSwapTemplate.GenerateHtlcP2PkhSwapPayment(
+            var lockScript = BitcoinSwapTemplate.CreateHtlcSwapLockScript(
                 aliceRefundAddress: refundAddress,
                 bobAddress: toAddress,
                 lockTimeStamp: lockTime.ToUnixTimeSeconds(),
                 secretHash: secretHash,
                 secretSize: secretSize,
-                expectedNetwork: currencyConfig.Network);
+                network: currencyConfig.Network);
 
             var feeInSatoshi = 0L;
 
