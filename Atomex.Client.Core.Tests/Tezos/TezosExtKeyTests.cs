@@ -5,6 +5,7 @@ using Xunit;
 
 using Atomex.Common.Memory;
 using Atomex.Wallets.Keys;
+using Atomex.Core;
 
 namespace Atomex.Client.Core.Tests
 {
@@ -29,7 +30,10 @@ namespace Atomex.Client.Core.Tests
             var signature = childKey.Sign(messageBytes);
             Assert.True(childKey.Verify(messageBytes, signature));
 
-            var address = Common.CurrenciesTestNet.Get<TezosConfig>("XTZ").AddressFromKey(childPublicKey);
+            var address = Common.CurrenciesTestNet
+                .Get<TezosConfig>("XTZ")
+                .AddressFromKey(childPublicKey, CurrencyConfig.StandardKey);
+
             Assert.NotNull(address);
         }
 
@@ -47,7 +51,10 @@ namespace Atomex.Client.Core.Tests
             var signature = childKey.Sign(messageBytes);
             Assert.True(childKey.Verify(messageBytes, signature));
 
-            var address = Common.CurrenciesTestNet.Get<TezosConfig>("XTZ").AddressFromKey(childPublicKey);
+            var address = Common.CurrenciesTestNet
+                .Get<TezosConfig>("XTZ")
+                .AddressFromKey(childPublicKey, TezosConfig.Bip32Ed25519Key);
+
             Assert.NotNull(address);
         }
 
@@ -68,7 +75,10 @@ namespace Atomex.Client.Core.Tests
                 var signature = childKey.Sign(messageBytes);
                 Assert.True(childKey.Verify(messageBytes, signature));
 
-                var address = Common.CurrenciesTestNet.Get<TezosConfig>("XTZ").AddressFromKey(childPublicKey);
+                var address = Common.CurrenciesTestNet
+                    .Get<TezosConfig>("XTZ")
+                    .AddressFromKey(childPublicKey, TezosConfig.Bip32Ed25519Key);
+
                 Assert.NotNull(address);
             }
         }

@@ -7,6 +7,7 @@ using Atomex.Common.Memory;
 using Atomex.Cryptography.Abstract;
 using Atomex.Wallets;
 using BitcoinExtKey = Atomex.Wallets.Bitcoin.BitcoinExtKey;
+using Atomex.Core;
 
 namespace Atomex.Client.Core.Tests
 {
@@ -34,7 +35,10 @@ namespace Atomex.Client.Core.Tests
             var signature = childKey.Sign(messageBytes);
             Assert.True(childKey.Verify(messageBytes, signature));
 
-            var address = Common.CurrenciesTestNet.Get<BitcoinConfig>("BTC").AddressFromKey(childPublicKey);
+            var address = Common.CurrenciesTestNet
+                .Get<BitcoinConfig>("BTC")
+                .AddressFromKey(childPublicKey, CurrencyConfig.StandardKey);
+
             Assert.NotNull(address);
         }
     }
